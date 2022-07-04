@@ -41,13 +41,17 @@ class Bubbles {
   }
 
   popBubble(bubbleId) {
-    const poppedBubble = this.#bubbles.find((bubble => bubble.id === bubbleId));
+    const poppedBubble = this.#bubbles.find(bubble => bubble.id === bubbleId);
     const indexOfPoppedBubble = this.#bubbles.indexOf(poppedBubble);
     this.#bubbles.splice(indexOfPoppedBubble, 1);
   }
 
   remainingBubbles() {
     return this.#bubbles.length;
+  }
+
+  findBubble(bubbleId) {
+    return this.#bubbles.find(bubble => bubble.id === bubbleId);
   }
 
   get getBubbles() {

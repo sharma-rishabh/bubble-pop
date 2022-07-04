@@ -1,6 +1,15 @@
 (function () {
   const px = pixel => pixel + 'px';
 
+  const randomInt = (upperLimit) => {
+    return Math.floor(Math.random() * upperLimit);
+  };
+
+  const getRandomSize = () => {
+    const sizes = [10, 20, 30, 40, 50];
+    return sizes[randomInt(sizes.length)];
+  }
+
   const drawBubble = (bubble) => {
     const bubbleElement = document.createElement('div');
 
@@ -73,7 +82,11 @@
 
   const isGameOver = (bubbles) => {
     return bubbles.remainingBubbles() === 10
-  }
+  };
+
+  const getRelativePoints = (size) => {
+    return 6 - (size / 10);
+  };
 
   const updateGame = (event, bubbles, scoreboard) => {
     if (!isBubble(event.target.id)) {
@@ -84,10 +97,11 @@
       return;
     }
 
-    const bubble = event.target;
-    scoreboard.points++;
-    bubble.remove();
-    bubbles.popBubble(bubble.id);
+    const bubbleElement = event.target;
+    const bubble = bubbles.findBubble(bubbleElement.id);
+    scoreboard.points += getRelativePoints(bubble.size);
+    bubbleElement.remove();
+    bubbles.popBubble(bubbleElement.id);
   };
 
   const createBubble = (bubbles, id, view, scoreboard, initialTimer) => {
@@ -102,9 +116,8 @@
 
       timer = timer - 5;
       const bubbleOrigin = view.randomPoint();
-      console.log(bubbleOrigin);
       const bubble = {
-        id: 'bubble-' + localId, ...bubbleOrigin, size: 50
+        id: 'bubble-' + localId, ...bubbleOrigin, size: getRandomSize()
       }
       bubbles.addBubble(bubble);
 
@@ -121,7 +134,7 @@
 
     const viewElement = document.getElementById('view');
     viewElement.addEventListener('mousedown', (event) => {
-      updateGame(event, bubbles, scoreboard)
+      updateGame(event, bubbles, scoreboard);
     });
 
     createBubble(bubbles, 1, view, scoreboard, 800);
